@@ -32,6 +32,19 @@ values('books'), ('PC-s'), ('games');
 insert into gamebar.products (name,category_id)
 values ('The book thief',1), ('MacBook Air M4',2), ('Monopoly',3);
 
+alter table gamebar.employees
+add middle_name varchar(50);
+
+alter table gamebar.products
+drop foreign key products_ibfk_1;
+
+alter table gamebar.products
+add constraint FK_CategoriesProducts
+foreign key(category_id) references categories(id);
+
+alter table gamebar.employees
+modify column middle_name varchar(100);
+
 update gamebar.products
 set name='1984', category_id=1
 where id=3;
