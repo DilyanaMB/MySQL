@@ -64,9 +64,12 @@ CREATE VIEW v_employees_hired_after_2000 AS
         employees
     WHERE
         YEAR(hire_date) > 2000
-        order by hire_date;
+    ORDER BY hire_date;
         
-SELECT * FROM v_employees_hired_after_2000;
+SELECT 
+    *
+FROM
+    v_employees_hired_after_2000;
 
 SELECT 
     first_name, last_name
@@ -77,20 +80,73 @@ WHERE
     
 use geography;
 
-select country_name,iso_code
-from countries
-where country_name like '%a%a%a%'
-order by country_name;
+SELECT 
+    country_name, iso_code
+FROM
+    countries
+WHERE
+    country_name LIKE '%a%a%a%'
+ORDER BY country_name;
 
-select peaks.peak_name, rivers.river_name, concat(lower(peak_name),substring(river_name,2)) as mix
-from peaks, rivers
-where right(peak_name,1)=left(lower(river_name),1)
-order by mix;
+SELECT 
+    peaks.peak_name,
+    rivers.river_name,
+    CONCAT(LOWER(peak_name),
+            SUBSTRING(river_name, 2)) AS mix
+FROM
+    peaks,
+    rivers
+WHERE
+    RIGHT(peak_name, 1) = LEFT(LOWER(river_name), 1)
+ORDER BY mix;
 
 use diablo;
 
+SELECT 
+    name, DATE_FORMAT(start, '%Y-%m-%d') AS start
+FROM
+    games g
+WHERE
+    YEAR(start) IN (2011 , 2012)
+ORDER BY start;
 
+SELECT 
+    user_name,
+    SUBSTRING_INDEX(email, '@', - 1) AS `email provider`
+FROM
+    users
+ORDER BY `email provider` , user_name;
 
+SELECT 
+    user_name, ip_address
+FROM
+    users
+WHERE
+    ip_address REGEXP '^.{3}.1.*..{3}$'
+ORDER BY user_name;
 
+SELECT 
+    name AS game,
+    CASE
+        WHEN HOUR(start) >= 0 && HOUR(start) < 12 THEN 'Morning'
+        WHEN HOUR(start) >= 12 && HOUR(start) < 18 THEN 'Afternoon'
+        WHEN HOUR(start) > 18 THEN 'Evening'
+    END AS `part of the day`,
+    CASE
+        WHEN duration <= 3 THEN 'Extra Short'
+        WHEN duration > 3 && duration <= 6 THEN 'Short'
+        WHEN duration > 6 && duration <= 10 THEN 'Long'
+        ELSE 'Extra Long'
+    END AS duration
+FROM
+    games;
 
+use orders;
 
+SELECT 
+    product_name,
+    order_date,
+    ADDDATE(order_date, INTERVAL 3 DAY) AS pay,
+    ADDDATE(order_date, INTERVAL 1 MONTH) AS deliver_due
+FROM
+    orders;
