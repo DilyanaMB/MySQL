@@ -145,7 +145,7 @@ ORDER BY department_id;
  from employees
  where manager_id is null;
  
--- SELECT 
+-- SELECT distinct -> check what will happen with distinct
 --     department_id,  (SELECT 
 --             salary
 --         FROM
