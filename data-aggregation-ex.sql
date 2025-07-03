@@ -107,19 +107,17 @@ WHERE
 GROUP BY department_id
 ORDER BY department_id;
  
-SELECT 
-    department_id, AVG(salary) AS avg_salary
-FROM
+CREATE TABLE `high_paid_employees` AS SELECT * FROM
     employees
 WHERE
     salary > 30000
 GROUP BY department_id;
  
-DELETE FROM employees 
+DELETE FROM high_paid_employees 
 WHERE
     salary > 30000 AND manager_id = 42;
   
-UPDATE employees 
+UPDATE high_paid_employees 
 SET 
     salary = salary + 5000
 WHERE
@@ -128,7 +126,7 @@ WHERE
 SELECT 
     department_id, AVG(salary) AS avg_salary
 FROM
-    employees
+    high_paid_employees
 GROUP BY department_id
 ORDER BY department_id;
  
@@ -136,32 +134,49 @@ SELECT
     department_id, MAX(salary) max_salary
 FROM
     employees
-WHERE
-    salary < 30000 || salary > 70000
 GROUP BY department_id
+HAVING max_salary < 30000 || max_salary > 70000
 ORDER BY department_id;
  
- select count(employee_id)
- from employees
- where manager_id is null;
+SELECT 
+    COUNT(*)
+FROM
+    employees
+WHERE
+    manager_id IS NULL;
  
--- SELECT distinct -> check what will happen with distinct
---     department_id,  (SELECT 
---             salary
---         FROM
---             employees
---         GROUP BY department_id
---         order by salary desc
---         limit 1) AS third_highest_salary
--- FROM
---     employees
--- WHERE
---     (SELECT 
---             salary
---         FROM
---             employees
---         GROUP BY department_id
---         order by salary desc
---        )>= 3
--- GROUP BY department_id;
---  
+SELECT DISTINCT
+    department_id,
+    (SELECT DISTINCT
+            `salary`
+        FROM
+            `employees` e
+        WHERE
+            e.`department_id` = `employees`.`department_id`
+        ORDER BY `salary` DESC
+        LIMIT 1 OFFSET 2) AS `third_highest_salary`
+FROM
+    `employees`
+HAVING `third_highest_salary` IS NOT NULL
+ORDER BY `department_id`;
+
+SELECT 
+    first_name, last_name, department_id
+FROM
+    employees
+WHERE
+    employees.salary > (SELECT 
+            AVG(salary)
+        FROM
+            employees e
+        WHERE
+            e.department_id = employees.department_id)
+ORDER BY employees.department_id , employees.employee_id
+LIMIT 10;
+
+SELECT 
+    department_id, SUM(salary) total_salary
+FROM
+    employees
+GROUP BY department_id
+ORDER BY department_id;
