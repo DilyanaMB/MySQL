@@ -73,7 +73,6 @@ last_name varchar(30),
 project_id int 
 );
 
-
 alter table projects
 add constraint fk_projects_employees
 foreign key (project_lead_id)
