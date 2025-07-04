@@ -27,7 +27,8 @@ order by town_id, address_id;
 
 select e.employee_id, e.first_name, e.last_name, e.department_id, e.salary 
 from employees e
-where manager_id is null;
+right join departments d on e.department_id = d.department_id
+where e.manager_id is null;
 
 -- 4. Higher Salary
 
